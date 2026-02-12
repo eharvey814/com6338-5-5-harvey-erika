@@ -1,44 +1,49 @@
-const hamburgerBtn = document.querySelector('.hamburger-btn');
-const hamburgerMenu = document.querySelector('.hamburger-menu');
+// Select elements
+var hamburgerBtn = document.querySelector(".hamburger-btn");
+var menu = document.querySelector(".hamburger-menu");
 
-// Toggle menu open/close
-function toggleMenu() {
-  const isOpen = hamburgerMenu.classList.toggle('show-menu');
-  hamburgerBtn.setAttribute('aria-expanded', isOpen);
+// Menu open - aria attribute true
+function openMenu() {
+    menu.classList.add("show-menu");
+    hamburgerBtn.setAttribute("aria-expanded", "true");
 }
 
-// Close menu
+// Menu close - aria attribute false
 function closeMenu() {
-  hamburgerMenu.classList.remove('show-menu');
-  hamburgerBtn.setAttribute('aria-expanded', 'false');
+    menu.classList.remove("show-menu");
+    hamburgerBtn.setAttribute("aria-expanded", "false");
 }
 
-// Click hamburger button
-hamburgerBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  toggleMenu();
+// Toggle menu when clicking the hamburger button
+hamburgerBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    if (menu.classList.contains("show-menu")) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
 });
 
-// Click outside menu closes it
-document.addEventListener('click', (e) => {
-  if (
-    hamburgerMenu.classList.contains('show-menu') &&
-    !hamburgerMenu.contains(e.target) &&
-    !hamburgerBtn.contains(e.target)
-  ) {
-    closeMenu();
-  }
+// Close menu when clicking outside of it
+document.addEventListener("click", (e) => {
+    var clickedInsideMenu = menu.contains(e.target);
+    var clickedButton = hamburgerBtn.contains(e.target);
+
+    if (!clickedInsideMenu && !clickedButton) {
+        closeMenu();
+    }
 });
 
-// Prevent clicks inside menu from closing it
-hamburgerMenu.addEventListener('click', (e) => {
-  e.stopPropagation();
+// Clicking inside does not close it
+menu.addEventListener("click", (e) => {
+    e.stopPropagation();
 });
 
-// Escape key closes menu and focuses button
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && hamburgerMenu.classList.contains('show-menu')) {
-    closeMenu();
-    hamburgerBtn.focus();
-  }
-});
+// Close menu with Escape key
+document.onkeyup = function (e) {
+    if (e.key === "Escape") {
+        closeMenu();
+        hamburgerBtn.focus();
+    }
+};
